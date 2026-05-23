@@ -186,7 +186,7 @@ function App() {
         const savedRSVP = data[0];
         // Cập nhật state danh sách
         setRsvps((prev) => [savedRSVP, ...prev]);
-        showToast('🎉 Xác nhận tham dự thành công! Cảm ơn bạn.');
+        showToast('🎉 Phúc Thành nhận thông tin nhóaaa');
         triggerConfetti();
         // Reset form
         setName('');
