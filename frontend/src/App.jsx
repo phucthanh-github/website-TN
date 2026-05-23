@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 
 // CẤU HÌNH API BACKEND
-// Nếu bạn chạy FastAPI ở cổng khác, hãy chỉnh sửa URL ở đây
-const API_URL = 'http://127.0.0.1:8000/api/rsvp';
+// Sử dụng biến môi trường khi deploy hoặc mặc định chạy local
+const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api/rsvp';
+
 
 function App() {
   // --- STATE QUẢN LÝ ---
