@@ -1,0 +1,36 @@
+# Node.js
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+
+# Python
+**/__pycache__/
+*.py[cod]
+*$py.class
+backend/venv/
+backend/env/
+backend/.venv/
+.venv/
+venv/
+ENV/
+
+# Database
+backend/*.db
+backend/*.sqlite3
+*.db
+*.sqlite3
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+frontend/.env
+frontend/.env.local
+backend/.env
+
+# OS/Editors
+.DS_Store
+.vscode/
+.idea/
+Thumbs.db
