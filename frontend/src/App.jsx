@@ -14,6 +14,16 @@ function App() {
   const [sparkleEffects, setSparkleEffects] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
 
+  // --- STATE CHO ĐỒNG HỒ ĐẾM NGƯỢC ---
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+
+  // --- STATE CHO VẬT THỂ BAY NỀN ---
+  const [bgParticles, setBgParticles] = useState([]);
+
+  // --- STATE CHO NHẠC NỀN ---
+  const [isPlaying, setIsPlaying] = useState(false);
+
+
   // =========================================================================
   // 1. CHỈNH SỬA: ĐƯỜNG DẪN ẢNH CỦA BẢN THÂN
   // Hãy thay thế hoặc thêm các file ảnh của bạn vào thư mục 'frontend/public/'
@@ -66,7 +76,55 @@ function App() {
     if (params.get('admin') === 'true') {
       setIsAdmin(true);
     }
+
+    // --- KHỞI TẠO ĐỒNG HỒ ĐẾM NGƯỢC ---
+    const targetDate = new Date('2026-06-09T11:00:00+07:00');
+    const updateCountdown = () => {
+      const now = new Date();
+      const difference = targetDate - now;
+      if (difference <= 0) {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        return;
+      }
+      const d = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const h = Math.floor((difference / (1000 * 60 * 60)) % 24);
+      const m = Math.floor((difference / 1000 / 60) % 60);
+      const s = Math.floor((difference / 1000) % 60);
+      setTimeLeft({ days: d, hours: h, minutes: m, seconds: s });
+    };
+    updateCountdown();
+    const countdownInterval = setInterval(updateCountdown, 1000);
+
+    // --- KHỞI TẠO VẬT THỂ NỀN ---
+    const symbols = ['🎓', '✨', '🎈', '🌸', '⭐', '🎓', '🎉'];
+    const initialParticles = Array.from({ length: 15 }).map((_, i) => ({
+      id: i,
+      x: Math.random() * 100,
+      size: 16 + Math.random() * 24,
+      symbol: symbols[Math.floor(Math.random() * symbols.length)],
+      delay: Math.random() * -20, // chạy ngay khi load
+      duration: 15 + Math.random() * 20,
+      opacity: 0.12 + Math.random() * 0.2
+    }));
+    setBgParticles(initialParticles);
+
+    return () => {
+      clearInterval(countdownInterval);
+    };
   }, []);
+
+  // --- XỬ LÝ PLAY/PAUSE NHẠC ---
+  const togglePlayMusic = () => {
+    const audio = document.getElementById('bg-music');
+    if (!audio) return;
+    if (isPlaying) {
+      audio.pause();
+    } else {
+      audio.play().catch(err => console.log("Không thể phát nhạc:", err));
+    }
+    setIsPlaying(!isPlaying);
+  };
+
 
   // --- HIỆU ỨNG THẢ CONFETTI KHI ĐĂNG KÝ THÀNH CÔNG ---
   const triggerConfetti = () => {
@@ -164,8 +222,31 @@ function App() {
 
   return (
     <div className="sky-bg">
+      {/* Thẻ nhạc nền ẩn */}
+      <audio id="bg-music" src="/music.mp3" loop />
+
+
       {/* Lớp hạt chấm li ti Halftone */}
       <div className="sky-dots"></div>
+
+      {/* Hiệu ứng vật thể bay trong nền */}
+      <div className="bg-particles-container">
+        {bgParticles.map((p) => (
+          <div
+            key={p.id}
+            className="bg-particle"
+            style={{
+              left: `${p.x}%`,
+              fontSize: `${p.size}px`,
+              animationDelay: `${p.delay}s`,
+              animationDuration: `${p.duration}s`,
+              opacity: p.opacity
+            }}
+          >
+            {p.symbol}
+          </div>
+        ))}
+      </div>
 
       {/* Mây bay trang trí */}
       <div className="clouds-container">
@@ -251,6 +332,35 @@ function App() {
         <p className="photo-switch-hint">
           <span>✨</span> Nhấp vào ảnh để xem thêm Phúc Thành đẹp trai như nào nhóa!
         </p>
+
+        {/* =========================================================================
+              ĐỒNG HỒ ĐẾM NGƯỢC (COUNTDOWN TIMER)
+             ========================================================================= */}
+        <div className="countdown-container">
+          <div className="countdown-title">⏳ Đếm ngược tới ngày được gặp anh Thành nò!</div>
+          <div className="countdown-timer">
+            <div className="countdown-item">
+              <span className="countdown-number">{timeLeft.days}</span>
+              <span className="countdown-label">Ngày</span>
+            </div>
+            <div className="countdown-separator">:</div>
+            <div className="countdown-item">
+              <span className="countdown-number">{String(timeLeft.hours).padStart(2, '0')}</span>
+              <span className="countdown-label">Giờ</span>
+            </div>
+            <div className="countdown-separator">:</div>
+            <div className="countdown-item">
+              <span className="countdown-number">{String(timeLeft.minutes).padStart(2, '0')}</span>
+              <span className="countdown-label">Phút</span>
+            </div>
+            <div className="countdown-separator">:</div>
+            <div className="countdown-item">
+              <span className="countdown-number">{String(timeLeft.seconds).padStart(2, '0')}</span>
+              <span className="countdown-label">Giây</span>
+            </div>
+          </div>
+        </div>
+
 
         {/* =========================================================================
               CHỈNH SỬA: LỜI MỞ ĐẦU VÀ GIỚI THIỆU BẢN THÂN
@@ -377,9 +487,9 @@ function App() {
             🗺️ <strong>Sơ đồ giảng đường & các khu vực</strong>: Tòa A sẽ là nơi làm lễ chính. Nếu thuận lợi, sau khi làm lễ xong, mình sẽ di chuyển đến <strong>Sân gạch tòa C</strong> (cái lùm cây ở giữa tòa B và C) để chụp hình (tại nó mát).
           </p>
           <div className="campus-map-container">
-            <img 
-              src="/UITMap.png" 
-              alt="Sơ đồ khuôn viên UIT" 
+            <img
+              src="/UITMap.png"
+              alt="Sơ đồ khuôn viên UIT"
               className="campus-map-img"
             />
           </div>
@@ -447,7 +557,7 @@ function App() {
           <form onSubmit={handleSubmitRSVP} className="rsvp-form-container">
             {/* Nhập Họ và tên */}
             <div className="form-group">
-              <label htmlFor="guest-name" className="form-label">Họ và tên của bạn *</label>
+              <label htmlFor="guest-name" className="form-label">Cho mình xin bí danh nha! (viết sao cho mình biết là ai á...)*</label>
               <input
                 type="text"
                 id="guest-name"
@@ -615,7 +725,19 @@ function App() {
         <p>🎓 Made with ❤️ for Phuc Thanh's Graduation Day 🎓</p>
         <p style={{ fontSize: '0.8rem', marginTop: '10px', opacity: 0.7 }}>© 2026 Phúc Thành. All rights reserved.</p>
       </footer>
+
+      {/* NÚT PHÁT NHẠC NỀN FLOATING */}
+      <button
+        className={`floating-music-btn ${isPlaying ? 'playing' : ''}`}
+        onClick={togglePlayMusic}
+        title={isPlaying ? "Tạm dừng nhạc" : "Phát nhạc nền"}
+      >
+        <div className="music-disk">
+          🎵
+        </div>
+      </button>
     </div>
+
   );
 }
 
