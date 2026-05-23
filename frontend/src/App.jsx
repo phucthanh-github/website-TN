@@ -249,7 +249,7 @@ function App() {
 
 
         <p className="photo-switch-hint">
-          <span>✨</span> Nhấp vào ảnh để xem thêm khoảnh khắc nha!
+          <span>✨</span> Nhấp vào ảnh để xem thêm Phúc Thành đẹp trai như nào nhóa!
         </p>
 
         {/* =========================================================================
@@ -336,7 +336,7 @@ function App() {
             📍 <strong>Trường Đại học Công nghệ Thông tin (UIT)</strong>: Khu phố 6, phường Linh Trung, TP. Thủ Đức, TP. Hồ Chí Minh.
           </p>
           <p style={{ textAlign: 'left', fontSize: '0.95rem', color: 'var(--light-text)' }}>
-            Hãy đi theo Xa Lộ Hà Nội vào hướng Làng Đại học, rẽ vào đường song hành hoặc đi thẳng tới cổng UIT nhé!
+            Ráng chạy theo ggm nhé chứ cái này mình khó mà chỉ....
           </p>
 
           {/* BẢN ĐỒ GOOGLE MAPS NHÚNG (Bản đồ thực tế của UIT) */}
@@ -364,6 +364,28 @@ function App() {
           </a>
         </div>
 
+        {/* =========================================================================
+              MỤC 3B: SƠ ĐỒ KHUÔN VIÊN TRƯỜNG (CAMPUS MAP)
+             ========================================================================= */}
+        <div className="section-card" id="ban-do-khuon-vien">
+          <h2 className="section-title">
+            {/* Icon Sơ đồ */}
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"></polygon><line x1="9" y1="3" x2="9" y2="18"></line><line x1="15" y1="6" x2="15" y2="21"></line></svg>
+            Sơ đồ Khuôn viên UIT
+          </h2>
+          <p style={{ textAlign: 'left', marginBottom: '15px' }}>
+            🗺️ <strong>Sơ đồ giảng đường & các khu vực</strong>: Tòa A sẽ là nơi làm lễ chính. Nếu thuận lợi, sau khi làm lễ xong, mình sẽ di chuyển đến <strong>Sân gạch tòa C</strong> (cái lùm cây ở giữa tòa B và C) để chụp hình (tại nó mát).
+          </p>
+          <div className="campus-map-container">
+            <img 
+              src="/UITMap.png" 
+              alt="Sơ đồ khuôn viên UIT" 
+              className="campus-map-img"
+            />
+          </div>
+        </div>
+
+
 
         {/* =========================================================================
               MỤC 4: HƯỚNG DẪN GỬI XE (CÓ THỂ TỰ CHỈNH SỬA NỘI DUNG CHI TIẾT TẠI ĐÂY)
@@ -383,7 +405,7 @@ function App() {
             <li className="parking-step-item">
               <div className="parking-step-num">1</div>
               <div className="parking-step-text">
-                <strong>Bãi gửi xe:</strong> Nằm phía bên tay trái nếu đi vào bằng cổng Hàn Thuyên. Nếu bạn đi vào bằng cổng Xa lộ Hà Nội, hãy men theo con đường nhựa, vòng qua tòa nhà B để đến bãi giữ xe.
+                <strong>Bãi gửi xe:</strong> Nằm phía bên tay trái nếu đi vào bằng cổng A (cổng Hàn Thuyên). Nếu bạn đi vào bằng cổng B (cổng Xa lộ Hà Nội), hãy men theo con đường nhựa, vòng qua tòa nhà B để đến bãi giữ xe.
               </div>
             </li>
             <li className="parking-step-item">
@@ -448,8 +470,8 @@ function App() {
                   onClick={() => setAttending(true)}
                 >
                   <div className="option-emoji">🥳</div>
-                  <div className="option-title option-title-yes">Chắc chắn rồi!</div>
-                  <div className="option-desc">Không chụp đẹp không về nhé!</div>
+                  <div className="option-title option-title-yes">Em sẽ đến chụp chung vs anh Thành đẹp trai ạaaa!!</div>
+                  <div className="option-desc">ok iu iu moa moa!</div>
                 </div>
 
                 {/* Lựa chọn KHÔNG tham gia */}
@@ -458,7 +480,7 @@ function App() {
                   onClick={() => setAttending(false)}
                 >
                   <div className="option-emoji">😢</div>
-                  <div className="option-title option-title-no">Tiếc quá, bận mất rồi</div>
+                  <div className="option-title option-title-no">Thằng bố m bận rồi cu!</div>
                   <div className="option-desc">Thoai không sao, nhưng nhớ gửi quà cho mình sau nhé hẹ hẹ.!</div>
                 </div>
 
@@ -467,7 +489,7 @@ function App() {
 
             {/* Lời chúc gửi kèm */}
             <div className="form-group">
-              <label htmlFor="guest-msg" className="form-label">Bạn có gì muốn nhắn gửi đến mình hông? (muốn nói gì nói)</label>
+              <label htmlFor="guest-msg" className="form-label">Bạn có gì muốn nhắn gửi đến mình hông?</label>
               <textarea
                 id="guest-msg"
                 className="form-input"

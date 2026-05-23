@@ -834,3 +834,25 @@ footer {
   margin-top: 50px;
   border-top: 4px solid var(--sky-blue-soft);
 }
+
+/* Campus Map styling */
+.campus-map-container {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 15px;
+  border: 2px solid #e0f6ff;
+  box-shadow: 0 4px 12px rgba(0, 159, 227, 0.05);
+  transition: transform 0.3s ease;
+}
+
+.campus-map-container:hover {
+  transform: scale(1.01);
+}
+
+.campus-map-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
