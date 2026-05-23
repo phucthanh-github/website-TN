@@ -1,8 +1,5 @@
 import { useState, useEffect } from 'react';
-
-// CẤU HÌNH API BACKEND
-// Sử dụng biến môi trường khi deploy hoặc mặc định chạy local
-const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api/rsvp';
+import { supabase } from './supabase';
 
 
 function App() {
@@ -28,19 +25,20 @@ function App() {
   ];
   const [currentPhotoIdx, setCurrentPhotoIdx] = useState(0);
 
-  // --- TẢI DANH SÁCH RSVP TỪ BACKEND ---
+  // --- TẢI DANH SÁCH RSVP TỪ SUPABASE ---
   const fetchRSVPs = async () => {
     try {
-      const response = await fetch(API_URL);
-      if (response.ok) {
-        const data = await response.json();
+      const { data, error } = await supabase
+        .from('rsvps')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      if (data) {
         setRsvps(data);
-      } else {
-        console.warn("Không thể tải danh sách từ Backend API, chuyển sang dùng LocalStorage.");
-        loadFromLocalStorage();
       }
     } catch (error) {
-      console.warn("Lỗi kết nối Backend. Dùng dữ liệu dự phòng từ LocalStorage:", error);
+      console.warn("Lỗi kết nối Supabase. Dùng dữ liệu dự phòng từ LocalStorage:", error);
       loadFromLocalStorage();
     }
   };
@@ -106,7 +104,7 @@ function App() {
     }, 1500);
   };
 
-  // --- XỬ LÝ GỬI FORM RSVP ---
+  // --- XỬ LÝ GỬI FORM RSVP LÊN SUPABASE ---
   const handleSubmitRSVP = async (e) => {
     e.preventDefault();
     if (!name.trim()) return;
@@ -119,14 +117,15 @@ function App() {
     };
 
     try {
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
+      const { data, error } = await supabase
+        .from('rsvps')
+        .insert([payload])
+        .select();
 
-      if (response.ok) {
-        const savedRSVP = await response.json();
+      if (error) throw error;
+
+      if (data && data.length > 0) {
+        const savedRSVP = data[0];
         // Cập nhật state danh sách
         setRsvps((prev) => [savedRSVP, ...prev]);
         showToast('🎉 Xác nhận tham dự thành công! Cảm ơn bạn.');
@@ -135,11 +134,10 @@ function App() {
         setName('');
         setMessage('');
       } else {
-        const errData = await response.json();
-        throw new Error(errData.detail || 'Có lỗi xảy ra');
+        throw new Error('Không thể lưu phản hồi');
       }
     } catch (error) {
-      console.warn("Lỗi kết nối API. Thực hiện lưu cục bộ (Local Fallback):", error);
+      console.warn("Lỗi kết nối Supabase. Thực hiện lưu cục bộ (Local Fallback):", error);
       // Fallback cục bộ
       const mockSaved = {
         id: Date.now(),
