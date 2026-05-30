@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Quicksand:wght@500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Dancing+Script:wght@500;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Quicksand:wght@500;700&display=swap');
 
 :root {
   --sky-blue-deep: #009fe3;
@@ -1002,5 +1002,170 @@ footer {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+/* =========================================================================
+   ROMANTIC INTRO OVERLAY STYLES
+   ========================================================================= */
+
+.intro-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, var(--sky-blue-soft) 0%, #bce9ff 50%, #e0f6ff 100%);
+  z-index: 10000; /* Extremely high z-index to overlay everything */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--dark-text);
+  opacity: 1;
+  transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* Halftone halftone dots matching main page */
+.intro-overlay::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(rgba(0, 159, 227, 0.08) 1.5px, transparent 1.5px);
+  background-size: 16px 16px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.intro-overlay.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Particle field inside overlay */
+.intro-stars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.intro-star {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  animation: introDrift linear infinite;
+}
+
+@keyframes introDrift {
+  0% { transform: translateY(-50px) rotate(0deg) translateX(0); }
+  50% { transform: translateY(50vh) rotate(180deg) translateX(25px); }
+  100% { transform: translateY(110vh) rotate(360deg) translateX(-25px); }
+}
+
+/* Day-theme content card matching invitation sections */
+.intro-card {
+  max-width: 680px;
+  width: 90%;
+  padding: 40px 30px;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 4px solid #e0f6ff;
+  border-radius: 28px;
+  text-align: center;
+  box-shadow: 0 20px 45px rgba(0, 159, 227, 0.15), 
+              inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+}
+
+.intro-overlay:active .intro-card {
+  transform: scale(0.985);
+}
+
+/* Poetic quote text formatted matching main page body */
+.intro-quote {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 1.15rem;
+  line-height: 1.9;
+  color: var(--dark-text);
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+@media (max-width: 600px) {
+  .intro-card {
+    padding: 30px 20px;
+    gap: 20px;
+  }
+  .intro-quote {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    text-align: center;
+  }
+}
+
+/* Glowing text cursor matching invitation sky blue */
+.intro-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.25rem;
+  background-color: var(--sky-blue-deep);
+  margin-left: 3px;
+  animation: introCursorBlink 0.9s infinite;
+  vertical-align: middle;
+}
+
+@keyframes introCursorBlink {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+/* Click to continue hint matching grass green color */
+.intro-continue {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--grass-green-dark);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-top: 15px;
+  animation: introPulse 2s infinite ease-in-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+@keyframes introPulse {
+  0%, 100% { opacity: 0.5; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(4px); }
+}
+
+.intro-continue-arrow {
+  font-size: 1.3rem;
+  animation: introBounce 1.5s infinite;
+}
+
+@keyframes introBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(5px); }
+}
+
 
 

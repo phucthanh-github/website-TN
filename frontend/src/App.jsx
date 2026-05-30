@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { supabase } from './supabase';
 
 
@@ -13,6 +13,14 @@ function App() {
   const [confetti, setConfetti] = useState([]);
   const [sparkleEffects, setSparkleEffects] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
+
+  // --- STATE CHO INTRO WELCOME SCREEN ---
+  const [showIntro, setShowIntro] = useState(true);
+  const [introText, setIntroText] = useState('');
+  const [introIsFadingOut, setIntroIsFadingOut] = useState(false);
+  const [introShowContinue, setIntroShowContinue] = useState(false);
+  const [introStars, setIntroStars] = useState([]);
+  const typingIntervalRef = useRef(null);
 
   // --- STATE CHO ĐỒNG HỒ ĐẾM NGƯỢC ---
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -77,7 +85,34 @@ function App() {
       setIsAdmin(true);
     }
 
-    // --- KHỞI TẠO ĐỒNG HỒ ĐẾM NGƯỢC ---
+    // --- KHỞI TẠO VẬT THỂ BAY NỀN INTRO ---
+    const introSymbols = ['🎓', '✨', '🎈', '🌸', '⭐', '🎓', '🎉'];
+    const starsArray = Array.from({ length: 20 }).map((_, i) => ({
+      id: i,
+      x: Math.random() * 100,
+      y: Math.random() * 120 - 10,
+      size: 16 + Math.random() * 24,
+      symbol: introSymbols[Math.floor(Math.random() * introSymbols.length)],
+      duration: 12 + Math.random() * 15,
+      delay: Math.random() * -20,
+      opacity: 0.08 + Math.random() * 0.15
+    }));
+    setIntroStars(starsArray);
+
+    // --- HIỆU ỨNG ĐÁNH CHỮ INTRO ---
+    const fullText = "Thân gửi những người tôi yêu…. Nếu bạn đọc được những dòng tin nhắn này, thì bạn chính là một trong những người quan trọng nhất đối với Phúc Thành. Xin được gửi lời cảm ơn sâu sắc đến bạn – người đã đồng hành cùng Phúc Thành trong suốt quãng đời sinh viên đầy trọn vẹn và ý nghĩa. Giờ đây, hãy để Phúc Thành được ghi lại những kỷ niệm đáng quý này bằng những tấm hình chụp mang đầy màu sắc với bạn trong buổi lễ tốt nghiệp thiêng liêng ấy. Rồi chúng ta sẽ có dịp gặp lại vào những ngày không xa…. Cảm ơn người đã thức cùng tôi!";
+    let currentIdx = 0;
+    typingIntervalRef.current = setInterval(() => {
+      if (currentIdx < fullText.length) {
+        setIntroText(fullText.substring(0, currentIdx + 1));
+        currentIdx++;
+      } else {
+        clearInterval(typingIntervalRef.current);
+        setIntroShowContinue(true);
+      }
+    }, 35);
+
+    // --- KHỜI TẠO ĐỒNG HỒ ĐẾM NGƯỢC ---
     const targetDate = new Date('2026-06-09T11:00:00+07:00');
     const updateCountdown = () => {
       const now = new Date();
@@ -110,8 +145,23 @@ function App() {
 
     return () => {
       clearInterval(countdownInterval);
+      if (typingIntervalRef.current) {
+        clearInterval(typingIntervalRef.current);
+      }
     };
   }, []);
+
+  // --- SCROLL LOCK KHI ĐANG MỞ INTRO ---
+  useEffect(() => {
+    if (showIntro) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [showIntro]);
 
   // --- XỬ LÝ PLAY/PAUSE NHẠC ---
   const togglePlayMusic = () => {
@@ -123,6 +173,31 @@ function App() {
       audio.play().catch(err => console.log("Không thể phát nhạc:", err));
     }
     setIsPlaying(!isPlaying);
+  };
+
+  // --- XỬ LÝ CLICK TRÊN MÀN HÌNH INTRO ---
+  const handleIntroClick = () => {
+    const fullText = "Thân gửi những người tôi yêu…. Nếu bạn đọc được những dòng tin nhắn này, thì bạn chính là một trong những người quan trọng nhất đối với Phúc Thành. Xin được gửi lời cảm ơn sâu sắc đến bạn – người đã đồng hành cùng Phúc Thành trong suốt quãng đời sinh viên đầy trọn vẹn và ý nghĩa. Giờ đây, hãy để Phúc Thành được ghi lại những kỷ niệm đáng quý này bằng những tấm hình chụp mang đầy màu sắc với bạn trong buổi lễ tốt nghiệp thiêng liêng ấy. Rồi chúng ta sẽ có dịp gặp lại vào những ngày không xa…. Cảm ơn người đã thức cùng tôi!";
+    
+    if (introText.length < fullText.length) {
+      // Nhấp lần đầu: Hiển thị toàn bộ chữ ngay lập tức
+      if (typingIntervalRef.current) {
+        clearInterval(typingIntervalRef.current);
+      }
+      setIntroText(fullText);
+      setIntroShowContinue(true);
+    } else {
+      // Nhấp lần hai: Mờ dần màn hình intro và bật nhạc nền
+      setIntroIsFadingOut(true);
+      const audio = document.getElementById('bg-music');
+      if (audio) {
+        audio.play().catch(err => console.log("Không thể phát nhạc:", err));
+        setIsPlaying(true);
+      }
+      setTimeout(() => {
+        setShowIntro(false);
+      }, 1000); // Khớp với thời gian transition mờ dần trong CSS (1s)
+    }
   };
 
 
@@ -222,6 +297,47 @@ function App() {
 
   return (
     <div className="sky-bg">
+      {/* Màn hình giới thiệu chào mừng (Intro Overlay) */}
+      {showIntro && (
+        <div 
+          className={`intro-overlay ${introIsFadingOut ? 'fade-out' : ''}`}
+          onClick={handleIntroClick}
+        >
+          <div className="intro-stars">
+            {introStars.map((s) => (
+              <div
+                key={s.id}
+                className="intro-star"
+                style={{
+                  left: `${s.x}%`,
+                  top: `${s.y}%`,
+                  fontSize: `${s.size}px`,
+                  animationDuration: `${s.duration}s`,
+                  animationDelay: `${s.delay}s`,
+                  opacity: s.opacity
+                }}
+              >
+                {s.symbol}
+              </div>
+            ))}
+          </div>
+          <div className="intro-card" onClick={(e) => e.stopPropagation()}>
+            <p className="intro-quote">
+              {introText}
+              {introText.length < "Thân gửi những người tôi yêu…. Nếu bạn đọc được những dòng tin nhắn này, thì bạn chính là một trong những người quan trọng nhất đối với Phúc Thành. Xin được gửi lời cảm ơn sâu sắc đến bạn – người đã đồng hành cùng Phúc Thành trong suốt quãng đời sinh viên đầy trọn vẹn và ý nghĩa. Giờ đây, hãy để Phúc Thành được ghi lại những kỷ niệm đáng quý này bằng những tấm hình chụp mang đầy màu sắc với bạn trong buổi lễ tốt nghiệp thiêng liêng ấy. Rồi chúng ta sẽ có dịp gặp lại vào những ngày không xa…. Cảm ơn người đã thức cùng tôi!".length && (
+                <span className="intro-cursor"></span>
+              )}
+            </p>
+            {introShowContinue && (
+              <div className="intro-continue" onClick={handleIntroClick}>
+                <span>Click để tiếp tục</span>
+                <span className="intro-continue-arrow">👇</span>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Thẻ nhạc nền ẩn */}
       <audio id="bg-music" src="/music.mp3" loop />
 
