@@ -537,7 +537,8 @@ function App() {
             <div className="detail-item">
               <div className="detail-icon">🎓</div>
               <div className="detail-label">Địa điểm</div>
-              <div className="detail-value">Sân gạch tòa C</div>
+              <div className="detail-value">Sảnh trước tòa E </div>
+              <div className="detail-value">(ngay logo UIT bự chà bá)</div>
               <div className="detail-value">Trường ĐH CNTT - UIT</div>
               <div className="detail-subvalue">Đại học Quốc gia TP.HCM</div>
             </div>
@@ -600,7 +601,7 @@ function App() {
             Sơ đồ Khuôn viên UIT
           </h2>
           <p style={{ textAlign: 'left', marginBottom: '15px' }}>
-            🗺️ <strong>Sơ đồ giảng đường & các khu vực</strong>: Tòa A sẽ là nơi làm lễ chính. Nếu thuận lợi, sau khi làm lễ xong, mình sẽ di chuyển đến <strong>Sân gạch tòa C</strong> (cái lùm cây ở giữa tòa B và C) để chụp hình (tại nó mát).
+            🗺️ <strong>Sơ đồ giảng đường & các khu vực</strong>: Tòa A sẽ là nơi làm lễ chính. Nếu thuận lợi, sau khi làm lễ xong, mình sẽ di chuyển đến <strong>Sân trước tòa E</strong> (ngay trước cái logo UIT bự bành ki nằm đối diện cổng A) để chụp hình.
           </p>
           <div className="campus-map-container">
             <img
