@@ -38,8 +38,10 @@ function App() {
   // và cập nhật đường dẫn dưới đây (ví dụ: '/anh_tot_nghiep_1.jpg')
   // =========================================================================
   const personalPhotos = [
-    '/thành.jpg',      // Ảnh 1 (Mặc định)
-    '/thuMoiTN.png'    // Ảnh 2 (Click để đổi)
+    '/pt2.jpg',      // Ảnh 1 (Mặc định)
+    '/pt3.jpg',    // Ảnh 2 (Click để đổi)
+    '/pt4.jpg',
+    '/pt5.jpg',
   ];
   const [currentPhotoIdx, setCurrentPhotoIdx] = useState(0);
 
@@ -178,7 +180,7 @@ function App() {
   // --- XỬ LÝ CLICK TRÊN MÀN HÌNH INTRO ---
   const handleIntroClick = () => {
     const fullText = "Thân gửi những người tôi yêu…. Nếu bạn đọc được những dòng tin nhắn này, thì bạn chính là một trong những người quan trọng nhất đối với Phúc Thành. Xin được gửi lời cảm ơn sâu sắc đến bạn – người đã đồng hành cùng Phúc Thành trong suốt quãng đời sinh viên đầy trọn vẹn và ý nghĩa. Giờ đây, hãy để Phúc Thành được ghi lại những kỷ niệm đáng quý này bằng những tấm hình chụp mang đầy màu sắc với bạn trong buổi lễ tốt nghiệp thiêng liêng ấy. Rồi chúng ta sẽ có dịp gặp lại vào những ngày không xa…. Cảm ơn người đã thức cùng tôi!";
-    
+
     if (introText.length < fullText.length) {
       // Nhấp lần đầu: Hiển thị toàn bộ chữ ngay lập tức
       if (typingIntervalRef.current) {
@@ -299,7 +301,7 @@ function App() {
     <div className="sky-bg">
       {/* Màn hình giới thiệu chào mừng (Intro Overlay) */}
       {showIntro && (
-        <div 
+        <div
           className={`intro-overlay ${introIsFadingOut ? 'fade-out' : ''}`}
           onClick={handleIntroClick}
         >
